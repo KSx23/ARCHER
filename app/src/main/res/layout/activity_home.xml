@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F5F5F5"
+    tools:context=".HomeActivity">
+
+    <Button
+        android:id="@+id/userProfileButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User Profile"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#3F51B5"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/shiftsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Shifts"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#3F51B5"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/performanceButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Performance Metrics"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#3F51B5"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/notificationsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notifications"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#3F51B5"
+        android:layout_marginBottom="8dp" />
+    <Button
+        android:id="@+id/roleButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Roles"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#3F51B5"
+        android:layout_marginBottom="8dp" />
+    <Button
+        android:id="@+id/timeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time-Off Requests"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#3F51B5"
+        android:layout_marginBottom="8dp" />
+    <Button
+        android:id="@+id/sendNotificationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Notification"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#3F51B5" />
+</LinearLayout>
