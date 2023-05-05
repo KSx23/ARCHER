@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import androidx.core.app.NotificationCompat
 
@@ -35,7 +36,7 @@ class HomeActivity : AppCompatActivity() {
         val notificationsButton = findViewById<Button>(R.id.notificationsButton)
         val roleButton = findViewById<Button>(R.id.roleButton)
         val timeButton = findViewById<Button>(R.id.timeButton)
-        val sendNotificationButton = findViewById<Button>(R.id.sendNotificationButton)
+
 
         // Set click listeners for the UI components.
         userProfileButton.setOnClickListener {
@@ -60,20 +61,20 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        roleButton.setOnClickListener {
-            val intent = Intent(this, RolesActivity::class.java)
-            intent.putExtra("userId", userId)
-            startActivity(intent)
+        if (userId != 1) {
+            roleButton.visibility = View.GONE
+        } else {
+            roleButton.setOnClickListener {
+                val intent = Intent(this, RolesActivity::class.java)
+                intent.putExtra("userId", userId)
+                startActivity(intent)
+            }
         }
 
         timeButton.setOnClickListener {
             val intent = Intent(this, TimeOffActivity::class.java)
             intent.putExtra("userId", userId)
             startActivity(intent)
-        }
-
-        sendNotificationButton.setOnClickListener {
-            sendNotification()
         }
     }
 

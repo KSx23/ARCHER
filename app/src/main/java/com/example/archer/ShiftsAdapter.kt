@@ -25,12 +25,21 @@ class ShiftsAdapter(
         /**
          * Initializes the view holder by attaching click listeners to the edit, delete, and book shift buttons.
          */
+
         init {
-            binding.btnEditShift.setOnClickListener {
-                onEditClickListener(shiftsList[adapterPosition])
+            if (currentUserId != 1) {
+                binding.btnEditShift.visibility = View.GONE
+            } else {
+                binding.btnEditShift.setOnClickListener {
+                    onEditClickListener(shiftsList[adapterPosition])
+                }
             }
-            binding.btnDeleteShift.setOnClickListener {
-                onDeleteClickListener(shiftsList[adapterPosition])
+            if (currentUserId != 1) {
+                binding.btnDeleteShift.visibility = View.GONE
+            } else {
+                binding.btnDeleteShift.setOnClickListener {
+                    onDeleteClickListener(shiftsList[adapterPosition])
+                }
             }
             binding.btnBookShift.setOnClickListener {
                 onBookClickListener(shiftsList[adapterPosition])

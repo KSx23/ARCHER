@@ -1,0 +1,18 @@
+Admin account is assigned only to User with UserId = 1
+
+Existing admin account details:
+Login: yyy
+Password: yyy
+
+
+Just in case database is empty, the first registered account is Admin.
+
+To be precise some features and functionalities are hidden if UserId != 1
+
+-------------------------------------------------------------------------------------------
+
+A HINT: NOTIFICATIONS SECTION - Long Press on the specific notification
+                                to be able to delete or edit
+
+-------------------------------------------------------------------------------------------
+in case of gnss input flags error go to the phone settings and switch "Use Location" button

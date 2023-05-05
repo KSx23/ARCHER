@@ -105,26 +105,46 @@ class TimeOffActivity : AppCompatActivity() {
                 selectedTimeOffRequest = null // Sets the selectedTimeOffRequest variable to null if nothing is selected.
             }
         }
+        // Retrieve the user ID passed from the previous activity.
+        val userId = intent.getIntExtra("userId", -1)
 
-        confirmButton.setOnClickListener {
-            selectedTimeOffRequest?.let { request -> // Executes the following code if a time off request is selected.
-                AlertDialog.Builder(this) // Initializes a new AlertDialog builder.
-                    .setTitle("Confirm Time Off Request") // Sets the title of the dialog.
-                    .setMessage("Are you sure you want to confirm this time off request?") // Sets the message of the dialog.
-                    .setPositiveButton("Confirm") { _, _ -> // Sets a positive button for the dialog that confirms the time off request.
-                        dbHelper.updateTimeOffRequestStatus(request.id, "confirmed") // Updates the status of the time off request in the database to "confirmed" using the database helper.
-                        Toast.makeText(this, "Time off request confirmed", Toast.LENGTH_SHORT).show() // Displays a success message to the user.
-                        displayTimeOffRequests() // Displays the updated list of time off requests.
-                    }
-                    .setNegativeButton("Cancel", null) // Sets a negative button for the dialog that does nothing.
-                    .show() // Shows the dialog.
-            } ?: Toast.makeText(this, "No time off request selected", Toast.LENGTH_SHORT).show() // Displays an error message to the user if no time off request is selected.
+        if (userId != 1) {
+            confirmButton.visibility = View.GONE
+        } else {
+            confirmButton.setOnClickListener {
+                selectedTimeOffRequest?.let { request -> // Executes the following code if a time off request is selected.
+                    AlertDialog.Builder(this) // Initializes a new AlertDialog builder.
+                        .setTitle("Confirm Time Off Request") // Sets the title of the dialog.
+                        .setMessage("Are you sure you want to confirm this time off request?") // Sets the message of the dialog.
+                        .setPositiveButton("Confirm") { _, _ -> // Sets a positive button for the dialog that confirms the time off request.
+                            dbHelper.updateTimeOffRequestStatus(request.id, "confirmed") // Updates the status of the time off request in the database to "confirmed" using the database helper.
+                            Toast.makeText(this, "Time off request confirmed", Toast.LENGTH_SHORT).show() // Displays a success message to the user.
+                            displayTimeOffRequests() // Displays the updated list of time off requests.
+                        }
+                        .setNegativeButton("Refuse", null) // Sets a negative button for the dialog that does nothing.
+                        .show() // Shows the dialog.
+                } ?: Toast.makeText(this, "No time off request selected", Toast.LENGTH_SHORT).show() // Displays an error message to the user if no time off request is selected.
+            }
+
         }
+        if (userId != 1) {
+            refuseButton.visibility = View.GONE
+        } else {
+            refuseButton.setOnClickListener {
+                selectedTimeOffRequest?.let { request -> // Executes the following code if a time off request is selected.
+                    AlertDialog.Builder(this) // Initializes a new AlertDialog builder.
+                        .setTitle("Confirm Time Off Request") // Sets the title of the dialog.
+                        .setMessage("Are you sure you want to delete this time off request?") // Sets the message of the dialog.
+                        .setPositiveButton("Delete") { _, _ -> // Sets a positive button for the dialog that confirms the time off request.
+                            dbHelper.deleteTimeOffRequest(request.id) // Updates the status of the time off request in the database to "confirmed" using the database helper.
+                            Toast.makeText(this, "Time off request deleted", Toast.LENGTH_SHORT).show() // Displays a success message to the user.
+                            displayTimeOffRequests() // Displays the updated list of time off requests.
+                        }
+                        .setNegativeButton("Cancel", null) // Sets a negative button for the dialog that does nothing.
+                        .show() // Shows the dialog.
+                } ?: Toast.makeText(this, "No time off request selected", Toast.LENGTH_SHORT).show() // Displays an error message to the user if no time off request is selected.
+            }
 
-        refuseButton.setOnClickListener {
-            selectedTimeOffRequest?.let { request -> // Executes the following code if a time off request is selected.
-                showConfirmationDialog(request, "Refuse") // Shows a confirmation dialog for refusing the time off request.
-            } ?: Toast.makeText(this, "No time off request selected", Toast.LENGTH_SHORT).show() // Displays an error message to the user if no time off request is selected.
         }
 
         displayTimeOffRequests()
@@ -158,6 +178,7 @@ class TimeOffActivity : AppCompatActivity() {
         titleTextView.text = "$action Time Off Request" // Sets the title of the dialog to the specified action.
         messageTextView.text = "Are you sure you want to $action this time off request?" // Sets the message of the dialog to a confirmation message for the specified action.
 
+
         confirmButton.setOnClickListener {
             if (action == "Confirm") {
                 dbHelper.updateTimeOffRequestStatus(request.id, "confirmed") // Updates the status of the specified time off request to "confirmed" in the database.
@@ -172,6 +193,13 @@ class TimeOffActivity : AppCompatActivity() {
         }
 
         cancelButton.setOnClickListener {
+            if (action == "Delete") {
+                dbHelper.deleteTimeOffRequest(request.id) // Updates the status of the specified time off request to "confirmed" in the database.
+                Toast.makeText(this, "Time off request deleted", Toast.LENGTH_SHORT).show() // Displays a confirmation message to the user.
+            } else {
+                dbHelper.updateTimeOffRequestStatus(request.id, "pending") // Updates the status of the specified time off request to "refused" in the database.
+                Toast.makeText(this, "Time off request is still pending", Toast.LENGTH_SHORT).show() // Displays a refusal message to the user.
+            }
             dialog.dismiss() // Dismisses the confirmation dialog.
         }
 

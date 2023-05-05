@@ -659,4 +659,21 @@ class DBHelper(context: Context) :
         return users
     }
 
+    fun editShift(shift: Shift): Boolean {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("user_id", shift.userId)
+            put("start_time", shift.startTime)
+            put("end_time", shift.endTime)
+            put("location", shift.location)
+            put("role_id", shift.roleId)
+        }
+
+        val affectedRows = db.update("shifts", contentValues, "id=?", arrayOf(shift.id.toString()))
+        db.close()
+
+        return affectedRows > 0
+    }
+
+
 }

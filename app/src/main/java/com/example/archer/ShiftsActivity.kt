@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -49,8 +51,49 @@ class ShiftsActivity : AppCompatActivity() {
         // Initialize the adapter for the RecyclerView
         shiftsAdapter = ShiftsAdapter(shiftsList, currentUserId,
             onEditClickListener = { shift ->
-                // Handle edit click
-                // Show edit dialog or navigate to edit shift activity
+                // Inflate custom dialog layout
+                val dialogView = layoutInflater.inflate(R.layout.dialog_edit_shift, null)
+
+                // Find input fields and set current shift data
+                val etStartTime = dialogView.findViewById<EditText>(R.id.etStartTime).apply {
+                    setText(shift.startTime.toString())
+                }
+                val etEndTime = dialogView.findViewById<EditText>(R.id.etEndTime).apply {
+                    setText(shift.endTime.toString())
+                }
+                val etLocation = dialogView.findViewById<EditText>(R.id.etLocation).apply {
+                    setText(shift.location)
+                }
+                val etRoleId = dialogView.findViewById<EditText>(R.id.etRoleId).apply {
+                    setText(shift.roleId.toString())
+                }
+
+                // Create and show the AlertDialog
+                AlertDialog.Builder(this)
+                    .setTitle("Edit Shift")
+                    .setView(dialogView)
+                    .setPositiveButton("Save") { _, _ ->
+                        // Get updated shift data from input fields
+                        val updatedShift = Shift(
+                            id = shift.id,
+                            userId = shift.userId,
+                            startTime = etStartTime.text.toString().toDouble(),
+                            endTime = etEndTime.text.toString().toDouble(),
+                            location = etLocation.text.toString(),
+                            roleId = etRoleId.text.toString().toInt()
+                        )
+
+                        // Call editShift method and update shiftsList
+                        if (dbHelper.editShift(updatedShift)) {
+                            val index = shiftsList.indexOf(shift)
+                            shiftsList[index] = updatedShift
+                            shiftsAdapter.notifyItemChanged(index)
+                        } else {
+                            Toast.makeText(this, "Failed to update shift.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
             },
             onDeleteClickListener = { shift ->
                 // Handle delete click
@@ -77,7 +120,7 @@ class ShiftsActivity : AppCompatActivity() {
                     shiftsAdapter.notifyItemChanged(shiftsList.indexOf(shift))
 
                     if (shift.userId == -1 ) { // User is canceling a booked shift
-                        sendNotification() // Send notification to other user who booked the shift
+                        sendNotification() // Send notification to users that shift is available
                     }
                 }
             })
@@ -87,21 +130,25 @@ class ShiftsActivity : AppCompatActivity() {
         binding.shiftsRecyclerView.adapter = shiftsAdapter
 
         // Set listener for "Add Shift" button
-        binding.btnAddShift.setOnClickListener {
-            // Get shift details from user input
-            val location = binding.etShiftLocation.text.toString().trim()
-            val startTime = binding.etShiftStartTime.text.toString().trim().toDouble()
-            val endTime = binding.etShiftEndTime.text.toString().trim().toDouble()
-            val roleId = 1 // Default role for a new shift
+        if (userId != 1) {
+            binding.btnAddShift.visibility = View.GONE
+        } else {
+            binding.btnAddShift.setOnClickListener {
+                // Get shift details from user input
+                val location = binding.etShiftLocation.text.toString().trim()
+                val startTime = binding.etShiftStartTime.text.toString().trim().toDouble()
+                val endTime = binding.etShiftEndTime.text.toString().trim().toDouble()
+                val roleId = 1 // Default role for a new shift
 
-            // Add the new shift to the database
-            val result = dbHelper.addShift(userId, location, startTime, endTime, roleId)
+                // Add the new shift to the database
+                val result = dbHelper.addShift(userId, location, startTime, endTime, roleId)
 
-            if (result > 0) {
-                // Add the new shift to the RecyclerView
-                val newShift = Shift(result.toInt(), userId, startTime, endTime, location, roleId)
-                shiftsList.add(newShift)
-                shiftsAdapter.notifyDataSetChanged()
+                if (result > 0) {
+                    // Add the new shift to the RecyclerView
+                    val newShift = Shift(result.toInt(), userId, startTime, endTime, location, roleId)
+                    shiftsList.add(newShift)
+                    shiftsAdapter.notifyDataSetChanged()
+                }
             }
         }
 

@@ -58,6 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"
-        android:text="Refuse Request" />
+        android:text="Delete Request" />
 
 </LinearLayout>
